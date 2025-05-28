@@ -5,10 +5,9 @@ use anyhow::{Context, Result};
 use crate::{
     models::{
         events::{
-            Event, OnBattleBeginEvent, OnDamageEvent, OnEntityDefeatedEvent,
-            OnInitializeEnemyEvent, OnSetLineupEvent, OnStatChangeEvent, OnTurnBeginEvent,
-            OnTurnEndEvent, OnUpdateCycleEvent, OnUpdateTeamFormationEvent, OnUpdateWaveEvent,
-            OnUseSkillEvent,
+            Event, OnBattleBeginEvent, OnDamageEvent, OnInitializeEnemyEvent, OnSetLineupEvent,
+            OnStatChangeEvent, OnTurnBeginEvent, OnTurnEndEvent, OnUpdateCycleEvent,
+            OnUpdateTeamFormationEvent, OnUpdateWaveEvent, OnUseSkillEvent,
         },
         misc::{Avatar, BattleEntity, BattleStats, Enemy, Entity, Team, TurnInfo},
         packets::Packet,
@@ -247,17 +246,17 @@ impl BattleContext {
         Ok(Packet::OnTurnEnd { turn_info })
     }
 
-    fn handle_on_entity_defeated_event(
-        e: OnEntityDefeatedEvent,
-        mut _battle_context: MutexGuard<'static, BattleContext>,
-    ) -> Result<Packet> {
-        // log::info!("{} has defeated {}", e.attacker);
+    // fn handle_on_entity_defeated_event(
+    //     e: OnEntityDefeatedEvent,
+    //     mut _battle_context: MutexGuard<'static, BattleContext>,
+    // ) -> Result<Packet> {
+    //     // log::info!("{} has defeated {}", e.attacker);
 
-        Ok(Packet::OnEntityDefeated {
-            killer: e.killer,
-            entity_defeated: e.entity_defeated,
-        })
-    }
+    //     Ok(Packet::OnEntityDefeated {
+    //         killer: e.killer,
+    //         entity_defeated: e.entity_defeated,
+    //     })
+    // }
 
     fn handle_on_battle_end_event(
         mut battle_context: MutexGuard<'static, BattleContext>,
@@ -401,9 +400,9 @@ impl BattleContext {
                 Event::OnDamage(e) => Self::handle_on_damage_event(e, battle_context),
                 Event::OnTurnBegin(e) => Self::handle_on_turn_begin_event(e, battle_context),
                 Event::OnTurnEnd(e) => Self::handle_on_turn_end_event(e, battle_context),
-                Event::OnEntityDefeated(e) => {
-                    Self::handle_on_entity_defeated_event(e, battle_context)
-                }
+                // Event::OnEntityDefeated(e) => {
+                //     Self::handle_on_entity_defeated_event(e, battle_context)
+                // }
                 Event::OnBattleEnd => Self::handle_on_battle_end_event(battle_context),
                 Event::OnUseSkill(e) => Self::handle_on_use_skill_event(e, battle_context),
                 Event::OnUpdateWave(e) => Self::handle_on_update_wave_event(e, battle_context),

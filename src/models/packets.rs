@@ -70,10 +70,10 @@ packet!(
         turn_info: TurnInfo
     }
 
-    OnEntityDefeated {
-        killer: Avatar,
-        entity_defeated: Avatar
-    }
+    // OnEntityDefeated {
+    //     killer: Avatar,
+    //     entity_defeated: Avatar
+    // }
 
     OnUseSkill {
         avatar: Avatar,

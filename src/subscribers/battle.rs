@@ -245,15 +245,15 @@ pub fn subscribe() -> Result<()> {
                 .va(),
             on_stat_change::on_stat_change
         );
-        subscribe_function!(
-            ON_KILL_ENEMY_Detour,
-            RPG_GameCore_TurnBasedAbilityComponent::get_class()
-                .unwrap()
-                .find_method_by_name("set_KillerEntity")
-                .unwrap()
-                .va(),
-            on_entity_defeated::on_entity_defeated
-        );
+        // subscribe_function!(
+        //     ON_KILL_ENEMY_Detour,
+        //     RPG_GameCore_TurnBasedAbilityComponent::get_class()
+        //         .unwrap()
+        //         .find_method_by_name("set_KillerEntity")
+        //         .unwrap()
+        //         .va(),
+        //     on_entity_defeated::on_entity_defeated
+        // );
         subscribe_function!(
             ON_UPDATE_TEAM_FORMATION_Detour,
             RPG_GameCore_TeamFormationComponent::get_class()
@@ -279,5 +279,5 @@ pub fn subscribe() -> Result<()> {
 // Interesting hierarchy
 // GameEntity -> _OwnerWorldRef -> BattleInstanceRef
 
-// Hmm is this good for hovering HP bar?
-// 	public UnityEngine.Transform TryGetSelectPointFromHitBoxGroup(RPG.GameCore.GameEntity) { }
+// Is this good for hovering HP bar?
+// public UnityEngine.Transform TryGetSelectPointFromHitBoxGroup(RPG.GameCore.GameEntity) { }

@@ -14,7 +14,7 @@ pub enum Event {
     OnUpdateWave(OnUpdateWaveEvent),
     OnUpdateCycle(OnUpdateCycleEvent),
     OnStatChange(OnStatChangeEvent),
-    OnEntityDefeated(OnEntityDefeatedEvent),
+    // OnEntityDefeated(OnEntityDefeatedEvent),
     OnUpdateTeamFormation(OnUpdateTeamFormationEvent),
     OnInitializeEnemy(OnInitializeEnemyEvent),
 }
@@ -59,10 +59,10 @@ pub struct OnDamageEvent {
     pub damage_type: &'static str,
 }
 
-pub struct OnEntityDefeatedEvent {
-    pub killer: Avatar,
-    pub entity_defeated: Avatar,
-}
+// pub struct OnEntityDefeatedEvent {
+//     pub killer: Avatar,
+//     pub entity_defeated: Avatar,
+// }
 
 pub struct OnStatChangeEvent {
     pub entity: Entity,
