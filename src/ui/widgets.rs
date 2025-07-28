@@ -16,11 +16,17 @@ impl App {
         let battle_context = BattleContext::get_instance();
         let available = ui.available_size();
         Plot::new("damage_pie")
+            //优化饼图显示位置，默认状态下不会被图例遮挡
+            .set_margin_fraction(egui::Vec2 { x: (0.), y: (0.05) })
+            .default_x_bounds(-13., 13.)
+            .default_y_bounds(-10.5, 20.)
             .legend(
                 Legend::default()
                     .position(egui_plot::Corner::RightTop)
-                    .text_style(TextStyle::Small),
+                    .text_style(TextStyle::Name("Legend".into())),
             )
+            .show_x(false)
+            .show_y(false)
             .height(available.y)
             .width(available.x)
             .data_aspect(1.0)
@@ -28,7 +34,7 @@ impl App {
             .show_grid(false)
             .show_background(false)
             .show_axes([false; 2])
-            .allow_drag(false)
+            // .allow_drag(false)
             .allow_zoom(false)
             .allow_scroll(false)
             .show(ui, |plot_ui: &mut egui_plot::PlotUi<'_>| {
@@ -43,13 +49,21 @@ impl App {
                         let percentage = segment.value / total_damage * 100.0;
 
                         let plot_points = PlotPoints::new(segment.points);
-                        let polygon = Polygon::new("Damage Pie", plot_points)
-                            .stroke(Stroke::new(1.5, color))
-                            .name(format!(
-                                "{}: {:.1}% ({} dmg)",
-                                avatar.name,
-                                percentage,
-                                helpers::format_damage(segment.value)
+                        // 不同的Polygon修改后拥有不同的唯一识别符，避免点击图例后饼图全部消失
+                        let polygon = Polygon::new(
+                            format!(
+                                "Damage Pie {index} For {avatar_name}", 
+                                avatar_name = avatar.name, 
+                                index = i
+                            ), 
+                            plot_points)
+                            .stroke(Stroke::new(1.8, color))
+                            .highlight(true)
+                            .name(format!(//优化图例的格式化文本，一般情况下能对齐
+                                "{name:<}:{damage:>6}#{percentage:>5.1}%",
+                                name = avatar.name,
+                                damage = helpers::format_damage(segment.value),
+                                percentage = percentage
                             ));
 
                         plot_ui.polygon(polygon);
@@ -63,6 +77,8 @@ impl App {
         let available = ui.available_size();
         Plot::new("damage_bars")
             .legend(Legend::default())
+            .show_x(false)
+            //.show_y(false)
             .height(available.y)
             .width(available.x)
             .allow_drag(false)
@@ -91,6 +107,11 @@ impl App {
                             .name(&avatar.name)
                             .fill(helpers::get_character_color(*color_idx))
                             .width(0.7)
+                            .stroke(
+                                Stroke::new(1.8, 
+                                helpers::get_character_color(*color_idx))
+                            )
+                            
                     })
                     .collect();
 
@@ -105,8 +126,10 @@ impl App {
             .legend(
                 Legend::default()
                     .position(egui_plot::Corner::RightTop)
-                    .text_style(TextStyle::Small),
+                    .text_style(TextStyle::Name("Legend".into())),
             )
+            .show_x(false)
+            .show_y(false)
             .height(available.y)
             .width(available.x)
             .include_y(0.0)
@@ -143,8 +166,10 @@ impl App {
             .legend(
                 Legend::default()
                     .position(egui_plot::Corner::RightTop)
-                    .text_style(TextStyle::Small),
+                    .text_style(TextStyle::Name("Legend".into())),
             )
+            .show_x(false)
+            .show_y(false)
             .height(available.y)
             .width(available.x)
             .include_y(0.0)
@@ -289,7 +314,7 @@ fn create_pie_segments(
 
 fn create_pie_slice(start_angle: f64, end_angle: f64) -> Vec<[f64; 2]> {
     let center = [0.0, 0.0];
-    let radius = 0.8;
+    let radius = 10.;
     let mut points = vec![center];
 
     let steps = 50;

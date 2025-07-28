@@ -1,5 +1,14 @@
 pub fn format_damage(value: f64) -> String {
-    if value >= 1_000_000.0 {
+    if value >= 100_000_000_000.0 {
+        //100.0G-Inf, 大于999.9G将会导致图例不对齐，这游戏应该不会膨胀到这种程度吧？ 
+        let m = value / 1_000_000_000.0;
+        format!("{m:.1}G")
+    } else if value >= 1_000_000_000.0 {
+        //1000M-99999M
+        let m = value / 1_000_000.0;
+        format!("{m:.0}M")
+    } else if value >= 1_000_000.0 {
+        //1.0M-999.9M
         let m = value / 1_000_000.0;
         format!("{m:.1}M")
     } else if value >= 1_000.0 {

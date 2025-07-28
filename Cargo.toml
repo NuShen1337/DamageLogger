@@ -1,6 +1,6 @@
 [package]
 name = "Astrolabe"
-edition = "2021"
+edition = "2024"
 license-file = "LICENSE"
 repository = "https://github.com/hessiser/veritas/"
 
