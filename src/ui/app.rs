@@ -14,6 +14,10 @@ use windows::Win32::{
     UI::{Input::KeyboardAndMouse::VK_MENU, WindowsAndMessaging::WM_KEYDOWN},
 };
 
+use egui::{FontId, FontFamily, TextStyle,};
+use std::collections::BTreeMap;
+
+
 #[derive(Default, PartialEq)]
 pub enum GraphUnit {
     #[default]
@@ -89,13 +93,22 @@ impl Overlay for App {
 
                                     ui.separator();
                                     ui.label(t!("Window Opacity"));
-                                    ui.add(
-                                        Slider::new(&mut self.widget_opacity, 0.0..=1.0).text(""),
+                                    ui.add_sized(
+                                        [ui.available_width()*0.8, ui.spacing().interact_size.y], 
+                                        Slider::new(&mut self.widget_opacity, 0.0..=1.0).text("")
                                     );
 
                                     ui.separator();
                                     ui.label(t!("Streamer Message"));
                                     ui.add(TextEdit::singleline(&mut self.streamer_msg));
+
+                                    ui.separator();
+                                    ui.label(t!("DamageLogger Panel"));
+                                    ui.add(TextEdit::multiline(&mut t!("http://localhost:1305/static/")));
+                                    
+                                    ui.separator();
+                                    ui.label(t!("Battle Timeline Panel"));
+                                    ui.add(TextEdit::multiline(&mut t!("http://localhost:1305/static/battle_timeline.html")));
 
                                     ui.separator();
                                     if ui.button(t!("Close Menu")).clicked() {
@@ -135,7 +148,8 @@ impl Overlay for App {
                 .corner_radius(10.0);
 
             if self.show_damage_distribution {
-                egui::containers::Window::new("")
+                // 窗口title未设置，设置为Damage Ratio
+                egui::containers::Window::new("Damage Ratio")
                     .frame(transparent_frame)
                     .resizable(true)
                     .min_width(200.0)
@@ -266,9 +280,26 @@ impl App {
             style.visuals.widgets.noninteractive.fg_stroke.color = Color32::WHITE;
         });
 
+        // 更改全局字体样式的大小
+        let custom_fontsize_style = egui::Style {
+            text_styles: BTreeMap::from([
+                (TextStyle::Heading, FontId::new(30.0, FontFamily::Proportional)),
+                (TextStyle::Name("Heading2".into()), FontId::new(26.0, FontFamily::Proportional)),
+                (TextStyle::Name("Context".into()), FontId::new(24.0, FontFamily::Proportional)),
+                (TextStyle::Name("Legend".into()), FontId::new(22.0, FontFamily::Monospace)),
+                (TextStyle::Body, FontId::new(24.0, FontFamily::Proportional)),
+                (TextStyle::Monospace, FontId::new(24.0, FontFamily::Monospace)),
+                (TextStyle::Button, FontId::new(22.0, FontFamily::Proportional)),
+                (TextStyle::Small, FontId::new(18.0, FontFamily::Proportional)),
+            ]),
+            ..ctx.style().as_ref().clone() 
+        };
+        ctx.set_style(custom_fontsize_style);
+
         Self {
             widget_opacity: 0.15,
-            streamer_mode: true,
+            // 默认不启用Steamer Mode
+            streamer_mode: false,
             ..Default::default()
         }
     }
